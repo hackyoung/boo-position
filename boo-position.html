@@ -1,0 +1,142 @@
+<link rel="import" href="../polymer/polymer-element.html">
+
+<dom-module id="boo-position">
+  <template>
+    <style>
+      :host {
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        z-index: 1;
+      }
+    </style>
+    <slot></slot>
+  </template>
+
+  <script>
+    const POS_TOP = 'boo-top';
+    const POS_TOP_LEFT = 'boo-top-left';
+    const POS_TOP_RIGHT = 'boo-top-right';
+    const POS_LEFT = 'boo-left';
+    const POS_CENTER = 'boo-center';
+    const POS_RIGHT = 'boo-right';
+    const POS_BOTTOM = 'boo-bottom';
+    const POS_BOTTOM_LEFT = 'boo-bottom-left';
+    const POS_BOTTOM_RIGHT = 'boo-bottom-right';
+    const POS_CUSTOM = 'boo-custom';
+    /**
+     * `boo-position`
+     * 
+     *
+     * @customElement
+     * @polymer
+     * @demo demo/index.html
+     */
+    class BooPosition extends Polymer.Element {
+      static get is() { return 'boo-position'; }
+      static get properties() {
+        return {
+          opened: {
+            type: Boolean,
+            value: false,
+            observer: '_openChanged'
+          },
+          type: {
+            type: String,
+            value: POS_CENTER,
+            observer: '_typeChanged'
+          },
+          posTop: {
+            type: Number,
+            value: 0
+          },
+          posLeft: {
+            type: Number,
+            value: 0
+          },
+          position: {
+            type: String,
+            value: 'fixed'
+          }
+        };
+      }
+      _openChanged(opened, oldopened) {
+        var me = this;
+        if (opened == true) {
+          me.style.display = 'flex';
+          var animation = me.animate([{
+            transform: 'translate(0px, -10px)',
+            opacity: 0
+          }, {
+            transform: 'translate(0px, 0px)',
+            opacity: 1
+          }], 300);
+          return;
+        }
+        if (oldopened === undefined) {
+          me.style.display = 'none';
+          return;
+        }
+        new Promise((resolved, reject) => {
+          var animation = me.animate([{
+            transform: 'translate(0, 0px)',
+            opacity: 1
+          }, {
+            transform: 'translate(0, -10px)',
+            opacity: 0
+          }], 300);
+          animation.onfinish = function() {
+            resolved();
+          };
+        }).then(() => {
+          me.style.display = 'none';
+        });
+      }
+      _typeChanged (type) {
+        console.log(type);
+        switch(type) {
+          case POS_TOP_LEFT:
+            this.style.justifyContent = 'flex-start';
+            this.style.alignItems = 'flex-start';
+            break;
+          case POS_TOP_RIGHT:
+            this.style.justifyContent = 'flex-end';
+            this.style.alignItems = 'flex-start';
+            break;
+          case POS_TOP:
+            this.style.justifyContent = 'center';
+            this.style.alignItems = 'flex-start';
+            break;
+          case POS_LEFT:
+            this.style.justifyContent = 'flex-start';
+            this.style.alignItems = 'center';
+            break;
+          case POS_CENTER:
+            this.style.justifyContent = 'center';
+            this.style.alignItems = 'center';
+            break;
+          case POS_RIGHT:
+            this.style.justifyContent = 'flex-end';
+            this.style.alignItems = 'center';
+            break;
+          case POS_BOTTOM:
+            this.style.justifyContent = 'center';
+            this.style.alignItems = 'flex-end';
+            break;
+          case POS_BOTTOM_LEFT:
+            this.style.justifyContent = 'flex-start';
+            this.style.alignItems = 'flex-end';
+            break;
+          case POS_BOTTOM_RIGHT:
+            this.style.justifyContent = 'flex-end';
+            this.style.alignItems = 'flex-end';
+            break;
+        }
+      }
+    }
+
+    window.customElements.define(BooPosition.is, BooPosition);
+  </script>
+</dom-module>

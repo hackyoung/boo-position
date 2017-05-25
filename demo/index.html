@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>boo-position demo</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../boo-position.html">
+
+    <custom-style>
+      <style is="custom-style" include="demo-pages-shared-styles">
+      </style>
+    </custom-style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic boo-position demo</h3>
+      <demo-snippet>
+        <template>
+          <style>
+            div {
+            }
+            div.content {
+              width: 100px;
+              height: 100px;
+              background-color: grey;
+              box-shadow: 0px 0px 10px rgba(0, 0, 0, .4);
+              display: inline-block;
+              margin: 10px;
+            }
+          </style>
+          <div>
+            <boo-position type='boo-top-left' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-top' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-top-right' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-left' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-center' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-right' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-bottom-left' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-bottom' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+            <boo-position type='boo-bottom-right' opened>
+              <div class="content"></div>
+              <div class="content"></div>
+            </boo-position>
+          </div>
+        </template>
+      </demo-snippet>
+    </div>
+  </body>
+</html>
