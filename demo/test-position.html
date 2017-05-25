@@ -1,0 +1,107 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../boo-position.html">
+
+<dom-module id="test-position">
+  <template>
+    <style>
+      boo-position {
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, .4);
+        padding: 30px 40px 50px 40px;
+        background-color: white;
+      }
+      boo-position.center {
+        width: 50%;
+        min-width: 300px;
+        min-height: 200px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, .4);
+        padding: 30px 40px 50px 40px;
+      }
+
+      boo-position.top-right,
+      boo-position.top-left {
+        margin-top: 20px;
+        background-color: grey;
+        width: 100px;
+        height: 50px;
+        color: white;
+      }
+
+      boo-position.top {
+        margin-top: 20px;
+        background-color: grey;
+        width: 200px;
+        height: 50px;
+        border-radius: 5px;
+        color: white;
+      }
+
+
+      @media screen and (max-width: 679px) {
+        boo-position {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    </style>
+    <div>状态: [[opened]]</div>
+    <boo-position class="top-left" type="boo-top-left" opened={{opened}}>
+      在左上角
+    </boo-position>
+    <boo-position class="top" type="boo-top" opened={{opened}}>
+      在上方
+    </boo-position>
+    <boo-position class="top-right" type="boo-top-right" opened={{opened}}>
+      在右上角
+    </boo-position>
+    <boo-position class="center" type=[[type]] opened={{opened}}>
+      <h1>这是一个测试</h1>
+      <p>代码在另一个文件里头, 呵呵搭</p>
+      <h1>这是一个测试</h1>
+      <h1>这是一个测试</h1>
+      <h1>这是一个测试</h1>
+      <h1>这是一个测试</h1>
+        height: 200px;
+        height: 200px;
+        height: 200px;
+        height: 200px;
+        height: 200px;
+      <p>代码在另一个文件里头, 呵呵搭</p>
+      <p>代码在另一个文件里头, 呵呵搭</p>
+      <p>代码在另一个文件里头, 呵呵搭</p>
+      <p>代码在另一个文件里头, 呵呵搭</p>
+    </boo-position>
+    <button on-click="_toggle">
+      切换
+    </button>
+  </template>
+  <script>
+    class TestPosition extends Polymer.Element {
+      static get is() { return 'test-position'; }
+      static get properties () {
+        return {
+          type: {
+            type: String,
+            value: POS_CENTER
+          },
+          opened: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+      constructor()
+      {
+        super();
+        for(var i in this.data) {
+          this.data[i].opened = true;
+        }
+      }
+      _toggle () {
+        var position = this.shadowRoot.querySelector('boo-position');
+        position.toggle();
+      }
+    }
+
+    window.customElements.define(TestPosition.is, TestPosition);
+  </script>
+</dom-module>

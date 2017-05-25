@@ -4,12 +4,14 @@
   <template>
     <style>
       :host {
-        top: 0px;
-        left: 0px;
         position: fixed;
-        width: 100vw;
-        height: 100vh;
         z-index: 1;
+        max-height: 100vh;
+        max-width: 100vw;
+        overflow: auto;
+      }
+      ::slotted {
+        display: block;
       }
     </style>
     <slot></slot>
@@ -26,6 +28,7 @@
     const POS_BOTTOM_LEFT = 'boo-bottom-left';
     const POS_BOTTOM_RIGHT = 'boo-bottom-right';
     const POS_CUSTOM = 'boo-custom';
+
     /**
      * `boo-position`
      * 
@@ -41,38 +44,54 @@
           opened: {
             type: Boolean,
             value: false,
-            observer: '_openChanged'
+            observer: '_openChanged',
+            notify: true
           },
           type: {
             type: String,
             value: POS_CENTER,
             observer: '_typeChanged'
           },
-          posTop: {
-            type: Number,
-            value: 0
-          },
-          posLeft: {
-            type: Number,
-            value: 0
-          },
-          position: {
-            type: String,
-            value: 'fixed'
-          }
         };
       }
+
+      constructor() {
+        super();
+        var me = this;
+        window.addEventListener('resize', () => {
+          me._typeChanged();
+        });
+      }
+
+      toggle () {
+        if (this.opened) {
+          this.opened = false;
+          return;
+        }
+        this.opened = true;
+      }
+
       _openChanged(opened, oldopened) {
         var me = this;
         if (opened == true) {
-          me.style.display = 'flex';
-          var animation = me.animate([{
-            transform: 'translate(0px, -10px)',
-            opacity: 0
-          }, {
-            transform: 'translate(0px, 0px)',
-            opacity: 1
-          }], 300);
+          me.style.display = 'block';
+          setTimeout(() => {
+            me._typeChanged();
+          });
+          // new Polymer((resolved, reject) => {
+            var animation = me.animate([{
+              transform: 'translate(0px, -10px)',
+              opacity: 0
+            }, {
+              transform: 'translate(0px, 0px)',
+              opacity: 1
+            }], 300);
+          //   animation.onfinish = function() {
+          //     resolved(me);
+          //   };
+          // }).then((pos) => {
+          //   // me.fire('after-show');
+          // });
           return;
         }
         if (oldopened === undefined) {
@@ -88,52 +107,77 @@
             opacity: 0
           }], 300);
           animation.onfinish = function() {
-            resolved();
+            resolved(me);
           };
-        }).then(() => {
+        }).then((pos) => {
           me.style.display = 'none';
+          me.fire('after-hide');
         });
       }
+
       _typeChanged (type) {
-        console.log(type);
+        type = type || this.type;
+        var rect = this.getBoundingClientRect();
+        if (rect.with == 0 || rect.height == 0) {
+          return;
+        }
+        var viewSize = this._getWindowSize();
+        var midWidth = (viewSize.width - rect.width) / 2;
+        var midHeight = (viewSize.height - rect.height) / 2;
+        var maxWidth = viewSize.width - rect.width;
+        var maxHeight = viewSize.height - rect.height;
         switch(type) {
           case POS_TOP_LEFT:
-            this.style.justifyContent = 'flex-start';
-            this.style.alignItems = 'flex-start';
+            this.style.top = '0px';
+            this.style.left = '0px';
             break;
           case POS_TOP_RIGHT:
-            this.style.justifyContent = 'flex-end';
-            this.style.alignItems = 'flex-start';
+            this.style.top = '0px';
+            this.style.left = maxWidth + 'px';
             break;
           case POS_TOP:
-            this.style.justifyContent = 'center';
-            this.style.alignItems = 'flex-start';
+            this.style.top = '0px';
+            this.style.left = midWidth + 'px';
             break;
           case POS_LEFT:
-            this.style.justifyContent = 'flex-start';
-            this.style.alignItems = 'center';
+            this.style.top = midHeight + 'px';
+            this.style.left = '0px';
             break;
           case POS_CENTER:
-            this.style.justifyContent = 'center';
-            this.style.alignItems = 'center';
+            this.style.top = midHeight + 'px';
+            this.style.left = midWidth + 'px';
             break;
           case POS_RIGHT:
-            this.style.justifyContent = 'flex-end';
-            this.style.alignItems = 'center';
+            this.style.top = midHeight + 'px';
+            this.style.left = maxWidth + 'px';
             break;
           case POS_BOTTOM:
-            this.style.justifyContent = 'center';
-            this.style.alignItems = 'flex-end';
+            this.style.top = maxHeight + 'px';
+            this.style.left = midWidth + 'px';
             break;
           case POS_BOTTOM_LEFT:
-            this.style.justifyContent = 'flex-start';
-            this.style.alignItems = 'flex-end';
+            this.style.top = maxHeight + 'px';
+            this.style.left = '0px';
             break;
           case POS_BOTTOM_RIGHT:
-            this.style.justifyContent = 'flex-end';
-            this.style.alignItems = 'flex-end';
+            this.style.top = maxHeight + 'px';
+            this.style.left = maxWidth + 'px';
             break;
         }
+      }
+      _getWindowSize () {
+        var result = {};
+        if (document.documentElement.clientWidth) {
+          result.width = document.documentElement.clientWidth;
+        } else {
+          result.width = document.body.clientWidth;
+        }
+        if (document.documentElement.clientHeight) {
+          result.height = document.documentElement.clientHeight;
+        } else {
+          result.height = document.body.clientHeight;
+        }
+        return result;
       }
     }
 
