@@ -43,8 +43,8 @@
         }
       }
     </style>
-    <div>状态: [[opened]]</div>
-    <boo-position class="top-left" type="boo-top-left" opened={{opened}}>
+    <div>状态: [[!_buttonText]]</div>
+    <boo-position class="top-left" on-after-show='_afterShow' on-after-hide='_afterHide' type="boo-top-left" opened={{opened}}>
       在左上角
     </boo-position>
     <boo-position class="top" type="boo-top" opened={{opened}}>
@@ -70,9 +70,7 @@
       <p>代码在另一个文件里头, 呵呵搭</p>
       <p>代码在另一个文件里头, 呵呵搭</p>
     </boo-position>
-    <button on-click="_toggle">
-      切换
-    </button>
+    <button on-click="_toggle">[[_buttonText]]</button>
   </template>
   <script>
     class TestPosition extends Polymer.Element {
@@ -86,6 +84,10 @@
           opened: {
             type: Boolean,
             value: false
+          },
+          _buttonText: {
+            type: String,
+            computed: '_computeButtonText'
           }
         };
       }
@@ -99,6 +101,18 @@
       _toggle () {
         var position = this.shadowRoot.querySelector('boo-position');
         position.toggle();
+      }
+      _afterShow () {
+        console.log('after show');
+      }
+      _afterHide () {
+        console.log('after hide');
+      }
+      _computeButtonText() {
+        if (this.opened) {
+          return '关闭';
+        }
+        return '打开';
       }
     }
 

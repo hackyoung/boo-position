@@ -52,6 +52,30 @@
             value: POS_CENTER,
             observer: '_typeChanged'
           },
+          showAnimation: {
+            type: Array,
+            value: [{
+              transform: 'translate(0px, -10px)',
+              opacity: 0
+            }, {
+              transform: 'translate(0px, 0px)',
+              opacity: 1
+            }]
+          },
+          hideAnimation: {
+            type: Array,
+            value: [{
+              transform: 'translate(0, 0px)',
+              opacity: 1
+            }, {
+              transform: 'translate(0, -10px)',
+              opacity: 0
+            }]
+          },
+          animationTime: {
+            type: Number,
+            value: 300
+          }
         };
       }
 
@@ -78,20 +102,14 @@
           setTimeout(() => {
             me._typeChanged();
           });
-          // new Polymer((resolved, reject) => {
-            var animation = me.animate([{
-              transform: 'translate(0px, -10px)',
-              opacity: 0
-            }, {
-              transform: 'translate(0px, 0px)',
-              opacity: 1
-            }], 300);
-          //   animation.onfinish = function() {
-          //     resolved(me);
-          //   };
-          // }).then((pos) => {
-          //   // me.fire('after-show');
-          // });
+          new Promise((resolved, reject) => {
+            var animation = me.animate(me.showAnimation, me.animationTime);
+            animation.onfinish = function() {
+              resolved(me);
+            };
+          }).then((pos) => {
+            me.dispatchEvent(new CustomEvent('after-show'), {target: pos});
+          });
           return;
         }
         if (oldopened === undefined) {
@@ -99,19 +117,13 @@
           return;
         }
         new Promise((resolved, reject) => {
-          var animation = me.animate([{
-            transform: 'translate(0, 0px)',
-            opacity: 1
-          }, {
-            transform: 'translate(0, -10px)',
-            opacity: 0
-          }], 300);
+          var animation = me.animate(me.hideAnimation, me.animationTime);
           animation.onfinish = function() {
             resolved(me);
           };
         }).then((pos) => {
           me.style.display = 'none';
-          me.fire('after-hide');
+          me.dispatchEvent(new CustomEvent('after-hide'), {target: pos});
         });
       }
 
