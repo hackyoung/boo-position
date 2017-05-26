@@ -83,7 +83,7 @@
         super();
         var me = this;
         window.addEventListener('resize', () => {
-          me._positionChanged();
+          me.update();
         });
       }
 
@@ -100,7 +100,7 @@
         if (opened == true) {
           me.style.display = 'block';
           setTimeout(() => {
-            me._positionChanged();
+            me.update();
           });
           new Promise((resolved, reject) => {
             var animation = me.animate(me.showAnimation, me.animationTime);
@@ -125,6 +125,10 @@
           me.style.display = 'none';
           me.dispatchEvent(new CustomEvent('after-hide'), {target: pos});
         });
+      }
+
+      update () {
+        this._positionChanged();
       }
 
       _positionChanged (position) {
