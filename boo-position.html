@@ -47,10 +47,10 @@
             observer: '_openChanged',
             notify: true
           },
-          type: {
+          position: {
             type: String,
             value: POS_CENTER,
-            observer: '_typeChanged'
+            observer: '_positionChanged'
           },
           showAnimation: {
             type: Array,
@@ -100,7 +100,7 @@
         if (opened == true) {
           me.style.display = 'block';
           setTimeout(() => {
-            me._typeChanged();
+            me._positionChanged();
           });
           new Promise((resolved, reject) => {
             var animation = me.animate(me.showAnimation, me.animationTime);
@@ -127,8 +127,8 @@
         });
       }
 
-      _typeChanged (type) {
-        type = type || this.type;
+      _positionChanged (position) {
+        position = position || this.position;
         var rect = this.getBoundingClientRect();
         if (rect.with == 0 || rect.height == 0) {
           return;
@@ -138,7 +138,7 @@
         var midHeight = (viewSize.height - rect.height) / 2;
         var maxWidth = viewSize.width - rect.width;
         var maxHeight = viewSize.height - rect.height;
-        switch(type) {
+        switch(position) {
           case POS_TOP_LEFT:
             this.style.top = '0px';
             this.style.left = '0px';
