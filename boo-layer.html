@@ -1,0 +1,35 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="./boo-position.html">
+<link rel="import" href="../paper-progress/paper-progress.html">
+
+<dom-module id="boo-layer">
+  <template>
+    <style>
+      :host {
+        box-shadow: 1px 1px 8px rgba(0, 0, 0, .4);
+        position: fixed;
+      }
+      paper-progress {
+        @apply --boo-layer-progress;
+      }
+    </style>
+    <paper-progress id="progress" indeterminate disabled=[[!progress]]></paper-progress>
+    <slot></slot>
+  </template>
+  <script>
+    class BooLayer extends BooPosition {
+      static get is() { return 'boo-layer'; }
+
+      static get properties () {
+        return {
+          progress: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+    }
+
+    window.customElements.define(BooLayer.is, BooLayer);
+  </script>
+</dom-module>

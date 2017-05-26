@@ -10,11 +10,31 @@
 
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+    <link rel="import" href="../../paper-button/paper-button.html">
     <link rel="import" href="../../polymer/polymer.html">
+    <link rel="import" href="../../paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="../../paper-listbox/paper-listbox.html">
+    <link rel="import" href="../../paper-item/paper-item.html">
     <link rel="import" href="./test-position.html">
+    <link rel="import" href="../boo-layer.html">
 
     <custom-style>
       <style is="custom-style" include="demo-pages-shared-styles">
+
+        boo-layer {
+          padding: 50px 40px 60px 40px;
+          width: 600px;
+          height: 300px;
+          background-color: white;
+          z-index: 1;
+          transition: 0.3s all ease-in;
+          --boo-layer-progress: {
+            margin-top: -50px;  
+            margin-left: -40px;
+            width: calc(100% + 80px);
+            --paper-progress-container-color: white;
+          }
+        }
       </style>
     </custom-style>
   </head>
@@ -23,8 +43,48 @@
       <h3>Basic boo-position demo</h3>
       <demo-snippet>
         <template>
-          <test-position></test-position>
+          <boo-layer id="boo-layer">
+            <h1>测试的层</h1>
+            <paper-button id="loading-button" raised>loading开关</paper-button>
+          </boo-layer>
+          <paper-dropdown-menu label="选择位置">
+            <paper-listbox id="pos" attr-for-selected="value" slot="dropdown-content" selected="boo-center">
+              <paper-item value="boo-top-left">左上角</paper-item>
+              <paper-item value="boo-top">上边</paper-item>
+              <paper-item value="boo-top-right">右上角</paper-item>
+              <paper-item value="boo-left">左边</paper-item>
+              <paper-item value="boo-center">中间</paper-item>
+              <paper-item value="boo-right">右边</paper-item>
+              <paper-item value="boo-bottom-left">左下角</paper-item>
+              <paper-item value="boo-bottom">下边</paper-item>
+              <paper-item value="boo-bottom-right">右下角</paper-item>
+            </paper-listbox>
+          </paper-dropdown-menu>
+          <paper-button id="pos-button" raised>运行或关闭</paper-button>
         </template>
+        <script>
+          let runButton = document.querySelector('#pos-button');
+          var layer = document.querySelector('boo-layer');
+          var pos = document.querySelector('#pos');
+          runButton.addEventListener('click', e => {
+            if (!layer.opened) {
+              layer.opened = true;
+              return;
+            }
+            layer.opened = false;
+          });
+          pos.addEventListener('iron-select', e => {
+            layer.type = pos.selected;
+          });
+          let button = document.querySelector('#loading-button');
+          button.addEventListener('click', e => {
+            if (layer.progress) {
+              layer.progress = false;
+              return;
+            }
+            layer.progress = true;
+          });
+        </script>
       </demo-snippet>
     </div>
   </body>
